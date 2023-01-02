@@ -25,7 +25,7 @@ Esta carpeta corresponde al Frontend de este proyecto.
 1. Inicia la aplicación backend
 
    ```sh
-   # @TODO: Completar
+   # TODO: Completar
    ```
 
 1. Para instalar nuevas dependencias en este paquete

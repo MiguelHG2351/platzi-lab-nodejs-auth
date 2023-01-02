@@ -6,9 +6,9 @@ export const updateUser = Router();
 
 updateUser.put(
   '/',
-  // @todo: Validación y sanitización de los datos de entrada
+  // TODO: Validación y sanitización de los datos de entrada
 
-  // @todo: Actualizar información usuario según la sesión del token JWT
+  // TODO: Actualizar información usuario según la sesión del token JWT
   async (request, response) => {
     return response.status(200).json({
       //

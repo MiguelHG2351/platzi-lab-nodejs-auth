@@ -13,7 +13,6 @@ app.use(express.json());
 
 // API
 app.use('/api/v1/sign-up', signUp);
-// TODO: generar un token jwt seguro para la sesión del usuario
 app.use('/api/v1/login', login);
 // TODO: completar las rutas de profile
 app.use('/api/v1/profile', profile);

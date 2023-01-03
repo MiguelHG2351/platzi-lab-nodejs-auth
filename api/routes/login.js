@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { UserModel } from '../models/User.js';
+import { signJWT } from '../jwt.js';
 
 export const login = Router();
 
@@ -28,15 +29,14 @@ login.post(
         });
       }
 
-      const isPasswordValid = password === user.password;
+      const isPasswordValid = await user.matchPassword(password);
       if (!isPasswordValid) {
         return response.status(400).json({
           error: 'username or password is incorrect',
         });
       }
 
-      // TODO: generate a JWT token
-      const token = 'jwt-token';
+      const token = await signJWT(username, user._id)
 
       return response.status(201).json({ token, username: user.username });
     } catch (error) {

@@ -9,7 +9,6 @@ deleteUser.delete(
   '/',
   header('Authorization').not().isEmpty().trim().custom(verifyJWT),
 
-  // TODO: Eliminar el usuario actual según la sesión del token JWT
   async (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {

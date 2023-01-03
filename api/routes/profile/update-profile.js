@@ -1,17 +1,34 @@
 import { Router } from 'express';
-import { body, check, validationResult } from 'express-validator';
+import { body, header, check, validationResult } from 'express-validator';
 import { UserModel } from '../../models/User.js';
+import { verifyJWT } from '../../jwt.js';
 
 export const updateUser = Router();
 
 updateUser.put(
   '/',
-  // TODO: Validación y sanitización de los datos de entrada
+  header('Authorization').not().isEmpty().trim().custom(verifyJWT),
+  body('username').not().isEmpty().trim(),
 
-  // TODO: Actualizar información usuario según la sesión del token JWT
   async (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json({ errors: errors.array() });
+    }
+    const { _id: id } = await verifyJWT(request.headers.authorization);
+    const user = await UserModel.updateOne(
+      { id }, { username: request.body.username }, {
+      runValidators: true,
+      new: true
+    }, (err, doc) => {
+      if (err) {
+        console.log(err)
+      }
+      console.log(doc)
+    });
+
     return response.status(200).json({
-      //
+      ...user
     });
   }
 );

@@ -1,17 +1,25 @@
 import { Router } from 'express';
-import { body, check, validationResult } from 'express-validator';
+import { body, check, validationResult, header } from 'express-validator';
 import { UserModel } from '../../models/User.js';
+import { verifyJWT } from '../../jwt.js';
 
 export const deleteUser = Router();
 
 deleteUser.delete(
   '/',
-  // TODO: Validación y sanitización de los datos de entrada
+  header('Authorization').not().isEmpty().trim().custom(verifyJWT),
 
   // TODO: Eliminar el usuario actual según la sesión del token JWT
   async (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(400).json({ errors: errors.array() });
+    }
+    const { _id: id } = await verifyJWT(request.headers.authorization);
+    const user = await UserModel.deleteOne({ id: id })
+
     return response.status(200).json({
-      //
+      ...user
     });
   }
 );

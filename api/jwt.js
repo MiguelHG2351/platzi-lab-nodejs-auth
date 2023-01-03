@@ -1,6 +1,6 @@
 import * as jose from 'jose';
 
-export async function signJWT(username, sub) {
+export const signJWT = async (username, sub) => {
   const secret = new TextEncoder().encode(
     process.env.JWT_TOKEN,
   )
@@ -16,4 +16,22 @@ export async function signJWT(username, sub) {
     .sign(secret)
 
   return jwt
+}
+
+export const verifyJWT = async (token) => {
+  const secret = new TextEncoder().encode(
+    process.env.JWT_TOKEN,
+  )
+  try {
+    const { payload } = await jose.jwtVerify(token, secret, {
+      issuer: 'urn:platzi:issuer',
+      audience: 'urn:platzi:audience',
+    })
+
+    console.log(payload)
+    return payload
+  } catch (error) {
+    console.log(error)
+    return Promise.reject(error)
+  }
 }
